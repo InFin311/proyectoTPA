@@ -4,7 +4,8 @@ import Interfaz_inicio
 import Interfaz_garzon
 import Interfaz_anfitrion
 
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QMainWindow, QPushButton, QStackedLayout, QLayout
+
+from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QMainWindow, QPushButton, QStackedLayout
 from PyQt6.QtGui import QColor
 
 
