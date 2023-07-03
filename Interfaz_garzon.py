@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QGroupBox, QComboBox, QPushButton
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QGroupBox, QComboBox, QPushButton, QMessageBox
 
 class GarzonInterfaz(QMainWindow):
     def __init__(self):
@@ -54,10 +54,11 @@ class GarzonInterfaz(QMainWindow):
     def place_order(self):
         comida_seleccionada = self.comida_combo.currentText()
         bebida_seleccionada = self.beb_combo.currentText()
-        if comida_seleccionada == "Seleccione su comida" or bebida_seleccionada == "Seleccione su bebida":
-            print("Por favor, seleccione su comida y bebida")
+        if comida_seleccionada == "Seleccione la comida" or bebida_seleccionada == "Seleccione el bebestible":
+            QMessageBox.warning(self, "Advertencia", "Por favor, seleccione su comida y bebida")
         else:
-            print(f"Pedido: Comida: {comida_seleccionada}, Bebida: {bebida_seleccionada}")
+            mensaje = f"Pedido: Comida: {comida_seleccionada}, Bebida: {bebida_seleccionada}"
+            QMessageBox.information(self, "Pedido realizado", mensaje)
             self.comida_combo.setCurrentIndex(0)
             self.beb_combo.setCurrentIndex(0)
 
