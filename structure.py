@@ -1,3 +1,4 @@
+import os
 import sys
 import Interfaz_inicio
 import Interfaz_garzon
@@ -102,6 +103,20 @@ class myWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    ruta = os.path.dirname(__file__)
+    try:
+        os.mkdir(f"{ruta}/data")
+    except FileExistsError:
+        pass
+
+    archivos = ["registros.csv"]
+    for archivo in archivos:
+        try:
+            temp = open(f"{ruta}/data/{archivo}","x")
+            temp.close()
+        except FileExistsError:
+            pass
+
     app = QApplication(sys.argv)
     window = myWindow()
     window.show()  # Obligatorio (dentro del init o fuera)
