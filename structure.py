@@ -1,7 +1,7 @@
 import sys
-from projectTPA import Interfaz_inicio
-from projectTPA import Interfaz_mesero
-from projectTPA import Interfaz_anfitrion
+import Interfaz_inicio
+import Interfaz_garzon
+import Interfaz_anfitrion
 
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QMainWindow, QPushButton, QStackedLayout, QLayout
 from PyQt6.QtGui import QColor
@@ -62,12 +62,12 @@ class myWindow(QMainWindow):
         self.login_window.main_layout.addWidget(botonVolverP[0])
 
         # Mesas
-        self.mesas = Interfaz_anfitrion.RestaurantInterface()
+        self.mesas = Interfaz_anfitrion.AnfitrionInterfaz()
         botonVolverP[1].setParent(self.mesas)
         botonVolverP[1].setGeometry(880, 725, 100, 50)
 
         # Garzon
-        self.mesero = Interfaz_mesero.MeseroInterfaz()
+        self.mesero = Interfaz_garzon.GarzonInterfaz()
         new_widget = self.mesero.takeCentralWidget()
         new_widget.layout().addWidget(botonVolverP[2])
         self.mesero.setCentralWidget(new_widget)

@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PyQt6.QtCore import QTimer, QElapsedTimer, pyqtSignal
 
-class AnfitrionInterfaz(QWidget):
+class AnfitrionInterfaz(QMainWindow):
     mesa_cambiada = pyqtSignal(str, str)
 
     def __init__(self):

@@ -55,9 +55,8 @@ class RegistroVentana(QDialog):
             QMessageBox.warning(self,"Error", "Las contraseñas deben ser identicas", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
 
 class LoginVentana(QWidget):
-    def __init__(self, registro):
+    def __init__(self):
         super().__init__()
-        self.registro = registro
         self.setWindowTitle("Inicio de Sesión")
         self.setGeometry(100, 100, 400, 200)
 
@@ -134,8 +133,7 @@ class InterfazPrincipal(QMainWindow):
         main_widget.setLayout(self.main_layout)
         self.setCentralWidget(main_widget)
 
-        registro = {}
-        login_widget = LoginVentana(registro)
+        login_widget = LoginVentana()
         self.main_layout.addWidget(login_widget)
 
 
