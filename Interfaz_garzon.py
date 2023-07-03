@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QGr
 class GarzonInterfaz(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Interfaz del Mesero")
+        self.setWindowTitle("Interfaz del Garzón")
         self.setGeometry(100, 100, 400, 300)
 
         main_layout = QVBoxLayout()

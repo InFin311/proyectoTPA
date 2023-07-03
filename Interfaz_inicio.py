@@ -94,21 +94,25 @@ class LoginVentana(QWidget):
         nombre = self.nombre_input.text()
         contrasena = self.contrasena_input.text()
         archivo = open(f"{os.path.dirname(__file__)}/data/registros.csv", "r")
+        existe = False
         for linea in archivo:
-            if nombre in linea:
-                if contrasena in linea:
-                    #iniciar sesion
-                    #llevar a alguna ventana
-                    linea = linea.split(",")
-                    linea[2] = linea[2][:-1]
-                    self.llamar_ventana(linea[2])
-                    # self.hide()
-                else:
-                    QMessageBox.warning(self,"Error", "La contraseña es incorrecta", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
-                    break
-            else:
-                QMessageBox.warning(self,"Error", "Usuario no registrado", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+            #verificar si el usuario existe
+            aux = linea.split(",")
+            if nombre == aux[0]:
+                existe = True
                 break
+            else:
+                continue
+        if existe == True:
+            #buscar la contraseña y autorizar
+            if contrasena == aux[1]:
+                #Loguear
+                self.llamar_ventana(aux[2][:-1])
+            else:
+                QMessageBox.warning(self,"Error", "La contraseña es incorrecta", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+        else:
+            QMessageBox.warning(self,"Error", "Usuario no registrado", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+                
     
     def llamar_ventana(self,modo):
         if modo == "anfitrion":
@@ -119,22 +123,6 @@ class LoginVentana(QWidget):
             print(modo)
             self.interfaz_garzon.show()
             self.hide()
-
-class InterfazPrincipal(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Interfaz Principal")
-        self.setGeometry(100, 100, 400, 200)
-
-        self.MainWindow = None
-
-        self.main_layout = QVBoxLayout()
-        main_widget = QWidget()
-        main_widget.setLayout(self.main_layout)
-        self.setCentralWidget(main_widget)
-
-        login_widget = LoginVentana()
-        self.main_layout.addWidget(login_widget)
 
 
 if __name__ == "__main__":
@@ -153,6 +141,6 @@ if __name__ == "__main__":
             pass
 
     app = QApplication(sys.argv)
-    ventana = InterfazPrincipal()
+    ventana = LoginVentana()
     ventana.show()
     sys.exit(app.exec())
