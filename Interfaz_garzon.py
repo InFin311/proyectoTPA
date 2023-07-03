@@ -1,16 +1,15 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QGroupBox, QComboBox, QPushButton
 
-class MeseroInterfaz(QMainWindow):
+class GarzonInterfaz(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Interfaz del Mesero")
         self.setGeometry(100, 100, 400, 300)
 
         main_layout = QVBoxLayout()
-        central_widget = QWidget()
-        central_widget.setLayout(main_layout)
-        self.setCentralWidget(central_widget)
+        
+        self.setLayout(main_layout)
 
         self.comida_combo = self.crear_seccion_comida(main_layout)
         self.beb_combo = self.crear_seccion_bebestible(main_layout)
@@ -61,9 +60,8 @@ class MeseroInterfaz(QMainWindow):
             self.comida_combo.setCurrentIndex(0)
             self.beb_combo.setCurrentIndex(0)
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ventana = MeseroInterfaz()
-    ventana.show()
-    sys.exit(app.exec())
+    interfaz = GarzonInterfaz()
+    interfaz.show()
+    app.exec()

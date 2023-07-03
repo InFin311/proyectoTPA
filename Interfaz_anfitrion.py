@@ -2,15 +2,13 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PyQt6.QtCore import QTimer, QElapsedTimer, pyqtSignal
 
-class RestaurantInterface(QMainWindow):
+class AnfitrionInterfaz(QWidget):
     mesa_cambiada = pyqtSignal(str, str)
 
     def __init__(self):
         super().__init__()
 
         self.initUI()
-
-
 
     def initUI(self):
         self.setWindowTitle('Restaurant Interface')
@@ -71,8 +69,8 @@ class RestaurantInterface(QMainWindow):
                 if elapsed_minutes >= 60:
                     print(f"La mesa {self.mesas[index].text()} lleva más de una hora ocupada.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    interface = RestaurantInterface()
-    interface.show()
-    sys.exit(app.exec())
+    interfaz = AnfitrionInterfaz()
+    interfaz.show()
+    app.exec()

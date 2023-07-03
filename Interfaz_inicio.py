@@ -1,10 +1,12 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QDialog
+import os
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QDialog, QMessageBox
+from Interfaz_anfitrion import AnfitrionInterfaz
+from Interfaz_garzon import GarzonInterfaz
 
 class RegistroVentana(QDialog):
-    def __init__(self, registro):
+    def __init__(self):
         super().__init__()
-        self.registro = registro
         self.setWindowTitle("Registro de Usuario")
         self.setGeometry(100, 100, 400, 200)
 
@@ -15,9 +17,13 @@ class RegistroVentana(QDialog):
         self.nombre_input = QLineEdit()
         self.contrasena_label = QLabel("Contraseña:")
         self.contrasena_input = QLineEdit()
+        self.contrasena_input.setEchoMode(QLineEdit.EchoMode.Password)
+        self.contrasena_label2 = QLabel("Confirmar contraseña:")
+        self.contrasena_input2 = QLineEdit()
+        self.contrasena_input2.setEchoMode(QLineEdit.EchoMode.Password)
         self.opcion_label = QLabel("Opción:")
         self.opcion_combo = QComboBox()
-        self.opcion_combo.addItems(["Opción 1", "Opción 2", "Opción 3"])
+        self.opcion_combo.addItems(["Anfitrión", "Garzón", "Chef", "Bartender", "Runner"])
         self.registrar_button = QPushButton("Registrar")
         self.registrar_button.clicked.connect(self.registrar_usuario)
 
@@ -25,6 +31,8 @@ class RegistroVentana(QDialog):
         main_layout.addWidget(self.nombre_input)
         main_layout.addWidget(self.contrasena_label)
         main_layout.addWidget(self.contrasena_input)
+        main_layout.addWidget(self.contrasena_label2)
+        main_layout.addWidget(self.contrasena_input2)
         main_layout.addWidget(self.opcion_label)
         main_layout.addWidget(self.opcion_combo)
         main_layout.addWidget(self.registrar_button)
@@ -32,12 +40,19 @@ class RegistroVentana(QDialog):
     def registrar_usuario(self):
         nombre = self.nombre_input.text()
         contrasena = self.contrasena_input.text()
-        opcion = self.opcion_combo.currentText()
-
-        self.registro[nombre] = {"contrasena": contrasena, "opcion": opcion}
-        print("Usuario registrado:", nombre)
-        self.accept()
-
+        cargo = self.opcion_combo.currentText()
+        if contrasena == self.contrasena_input2.text():
+            #registrar
+            #trabajar string cargo
+            cargo = cargo.replace("ó","o")
+            registro = f"{nombre},{contrasena},{cargo.lower()}\n"
+            archivo = open(f"{os.path.dirname(__file__)}/data/registros.csv","a+")
+            archivo.write(registro)
+            archivo.close()
+            QMessageBox.information(self, "Exito", "El usuario ha sido registrado", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+            self.accept()
+        else:
+            QMessageBox.warning(self,"Error", "Las contraseñas deben ser identicas", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
 
 class LoginVentana(QWidget):
     def __init__(self, registro):
@@ -46,6 +61,10 @@ class LoginVentana(QWidget):
         self.setWindowTitle("Inicio de Sesión")
         self.setGeometry(100, 100, 400, 200)
 
+        #Interfaces
+        self.interfaz_anfitrion = AnfitrionInterfaz()
+        self.interfaz_garzon = GarzonInterfaz()
+
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
 
@@ -53,6 +72,7 @@ class LoginVentana(QWidget):
         self.nombre_input = QLineEdit()
         self.contrasena_label = QLabel("Contraseña:")
         self.contrasena_input = QLineEdit()
+        self.contrasena_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.iniciar_button = QPushButton("Iniciar Sesión")
         self.iniciar_button.clicked.connect(self.iniciar_sesion)
         self.registrar_button = QPushButton("Registrar Usuario")
@@ -66,7 +86,7 @@ class LoginVentana(QWidget):
         main_layout.addWidget(self.registrar_button)
 
     def mostrar_ventana_registro(self):
-        ventana_registro = RegistroVentana(self.registro)
+        ventana_registro = RegistroVentana()
         if ventana_registro.exec() == QDialog.accepted:
             self.nombre_input.clear()
             self.contrasena_input.clear()
@@ -74,18 +94,32 @@ class LoginVentana(QWidget):
     def iniciar_sesion(self):
         nombre = self.nombre_input.text()
         contrasena = self.contrasena_input.text()
-
-        if nombre in self.registro and self.registro[nombre]["contrasena"] == contrasena:
-            opcion = self.registro[nombre]["opcion"]
-            print("Inicio de sesión exitoso.")
-            print("Nombre:", nombre)
-            print("Opción seleccionada:", opcion)
-        else:
-            print("Error en el inicio de sesión.")
-
-        self.nombre_input.clear()
-        self.contrasena_input.clear()
-
+        archivo = open(f"{os.path.dirname(__file__)}/data/registros.csv", "r")
+        for linea in archivo:
+            if nombre in linea:
+                if contrasena in linea:
+                    #iniciar sesion
+                    #llevar a alguna ventana
+                    linea = linea.split(",")
+                    linea[2] = linea[2][:-1]
+                    self.llamar_ventana(linea[2])
+                    # self.hide()
+                else:
+                    QMessageBox.warning(self,"Error", "La contraseña es incorrecta", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+                    break
+            else:
+                QMessageBox.warning(self,"Error", "Usuario no registrado", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
+                break
+    
+    def llamar_ventana(self,modo):
+        if modo == "anfitrion":
+            print(modo)
+            self.interfaz_anfitrion.show()
+            self.hide()
+        elif modo == "garzon":
+            print(modo)
+            self.interfaz_garzon.show()
+            self.hide()
 
 class InterfazPrincipal(QMainWindow):
     def __init__(self):
@@ -104,3 +138,23 @@ class InterfazPrincipal(QMainWindow):
         login_widget = LoginVentana(registro)
         self.main_layout.addWidget(login_widget)
 
+
+if __name__ == "__main__":
+    ruta = os.path.dirname(__file__)
+    try:
+        os.mkdir(f"{ruta}/data")
+    except FileExistsError:
+        pass
+
+    archivos = ["registros.csv"]
+    for archivo in archivos:
+        try:
+            temp = open(f"{ruta}/data/{archivo}","x")
+            temp.close()
+        except FileExistsError:
+            pass
+
+    app = QApplication(sys.argv)
+    ventana = InterfazPrincipal()
+    ventana.show()
+    sys.exit(app.exec())
