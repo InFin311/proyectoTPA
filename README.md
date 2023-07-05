@@ -5,3 +5,5 @@
   Ignacio Soto,
   Vicente Veloso y
   Ricardo Angulo
+
+  Link de informe: https://docs.google.com/document/d/1fFHtvCJTlF0y2J50iYsWHXWHGe4BzztAaSZ9xTp6ZIE/edit?usp=sharing
