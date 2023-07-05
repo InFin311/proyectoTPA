@@ -1,4 +1,5 @@
 import sys
+import csv
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QGroupBox, QComboBox, QPushButton, QMessageBox
 
 class GarzonInterfaz(QMainWindow):
@@ -51,6 +52,11 @@ class GarzonInterfaz(QMainWindow):
         order_button.clicked.connect(self.place_order)
         layout.addWidget(order_button)
 
+    def guardar_pedido(self, comida, bebida):
+        with open ('pedidos.csv', mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([comida, bebida])
+
     def place_order(self):
         comida_seleccionada = self.comida_combo.currentText()
         bebida_seleccionada = self.beb_combo.currentText()
@@ -61,6 +67,7 @@ class GarzonInterfaz(QMainWindow):
             QMessageBox.information(self, "Pedido realizado", mensaje)
             self.comida_combo.setCurrentIndex(0)
             self.beb_combo.setCurrentIndex(0)
+            self.guardar_pedido(comida_seleccionada, bebida_seleccionada)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
