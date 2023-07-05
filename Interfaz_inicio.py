@@ -3,6 +3,7 @@ import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QDialog, QMessageBox
 from Interfaz_anfitrion import AnfitrionInterfaz
 from Interfaz_garzon import GarzonInterfaz
+from Interfaz_bartender import VentanaBartender
 
 class RegistroVentana(QDialog):
     def __init__(self):
@@ -60,10 +61,6 @@ class LoginVentana(QWidget):
         self.setWindowTitle("Inicio de Sesión")
         self.setGeometry(100, 100, 400, 200)
 
-        #Interfaces
-        self.interfaz_anfitrion = AnfitrionInterfaz()
-        self.interfaz_garzon = GarzonInterfaz()
-
         main_layout = QVBoxLayout()
         self.setLayout(main_layout)
 
@@ -107,22 +104,28 @@ class LoginVentana(QWidget):
             #buscar la contraseña y autorizar
             if contrasena == aux[1]:
                 #Loguear
-                self.llamar_ventana(aux[2][:-1])
+                self.llamar_ventana(aux[2][:-1],aux[0])
             else:
                 QMessageBox.warning(self,"Error", "La contraseña es incorrecta", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
         else:
             QMessageBox.warning(self,"Error", "Usuario no registrado", QMessageBox.StandardButton.Close, QMessageBox.StandardButton.Close)
                 
     
-    def llamar_ventana(self,modo):
+    def llamar_ventana(self,modo, usuario=None):
         if modo == "anfitrion":
             print(modo)
+            self.interfaz_anfitrion = AnfitrionInterfaz()
             self.interfaz_anfitrion.show()
             self.hide()
         elif modo == "garzon":
             print(modo)
+            self.interfaz_garzon = GarzonInterfaz()
             self.interfaz_garzon.show()
             self.hide()
+        elif modo == "bartender":
+            print(modo)
+            self.interfaz_bartender = VentanaBartender(usuario)
+            self.interfaz_bartender.show()
 
 
 if __name__ == "__main__":
@@ -132,7 +135,7 @@ if __name__ == "__main__":
     except FileExistsError:
         pass
 
-    archivos = ["registros.csv"]
+    archivos = ["registros.csv","comandas.csv"]
     for archivo in archivos:
         try:
             temp = open(f"{ruta}/data/{archivo}","x")
