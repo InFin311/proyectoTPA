@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import os
 
 class Mesa:
     def __init__(self, comandas: list, idMesa=0,
@@ -87,10 +87,30 @@ class Comanda:
         if self.pedido_vacio == True:
             return "El pedido esta vacio"
         else:
-            aux = str()
+            aux = ""
             for i in self.pedidos:
-                aux.append(f"{i}\n")
+                if len(self.pedidos) == 1:
+                    aux += f"{i}"
+                else:
+                    if i == self.pedidos[-1]:
+                        aux += f"{i}"
+                    else:
+                        aux += f"{i};"
             return aux
+    
+    def guardar_comanda(self):
+        if self.pedido_vacio == True:
+            #Retorna falso, no se guardaran pedidos vacios
+            return False
+        else:
+            archivo = open(f"{os.path.dirname(__file__)}/data/comandas.csv","a")
+            temp_comanda = f"{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
+            archivo.write(temp_comanda)
+            archivo.close()
+            return True
+        
+
+
 
 class Plato:
     def __init__(self):
@@ -98,6 +118,8 @@ class Plato:
 
 
 if __name__ == "__main__":
-    _time = datetime.now()
-    mesita = Mesa([Comanda()], horaReserva=_time)
-    print(mesita)
+    comandafalsa = Comanda("Vicente")
+    comandafalsa.agregar_pedidos("bebida")
+    comandafalsa.agregar_pedidos("hamburguesa")
+    comandafalsa.agregar_pedidos("papas")
+    comandafalsa.guardar_comanda()
