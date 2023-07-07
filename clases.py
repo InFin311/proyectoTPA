@@ -34,12 +34,14 @@ class Mesa:
 
 
 class Comanda:
-    def __init__(self,garzon: str):
-        self.garzon = garzon
+    def __init__(self,garzon: str, tipo:str):
+        self.garzon = garzon.lower()
         self.hora = datetime.now().strftime("%H:%M")
         self.pedidos = []
-        #estados 0 = en espera ; 1 = preparando; 2 = cocinando; 3 = terminado
+        #estados si es comida 0 = en espera ; 1 = preparando; 2 = cocinando; 3 = terminado
+        #estados si es bebestible 0 = en espera ; 1 = preparando; 2 = terminado
         self.estado = 0
+        self.tipo = tipo.lower()
 
     def pedido_vacio(self):
         if len(self.pedidos) == 0:
@@ -62,20 +64,30 @@ class Comanda:
     
     def cambiar_estado(self,nuevo_estado:int):
         self.estado = nuevo_estado
+
         return True
     
     def get_estado(self):
-        if self.estado == 0:
-            return "En espera"
+        if self.get_tipo() == "comida":
+            if self.estado == 0:
+                return "En espera"
         
-        elif self.estado == 1:
-            return "Preparando"
+            elif self.estado == 1:
+                return "Preparando"
         
-        elif self.estado == 2:
-            return "Cocinando"
+            elif self.estado == 2:
+                return "Cocinando"
         
-        elif self.estado == 3:
-            return "Terminado"
+            elif self.estado == 3:
+                return "Terminado"
+            
+        elif self.get_tipo() == "bebestible":
+            if self.estado == 0:
+                return "En espera"
+            elif self.estado == 1:
+                return "Preparando"
+            elif self.estado == 2:
+                return "Terminado"
 
     def get_garzon(self):
         return self.garzon
@@ -92,22 +104,32 @@ class Comanda:
                 if len(self.pedidos) == 1:
                     aux += f"{i}"
                 else:
+                    #Si el elemento es el ultimo
                     if i == self.pedidos[-1]:
                         aux += f"{i}"
                     else:
-                        aux += f"{i};"
+                        aux += f"{i} - "
             return aux
+    def get_tipo(self):
+        return self.tipo
     
     def guardar_comanda(self):
         if self.pedido_vacio == True:
             #Retorna falso, no se guardaran pedidos vacios
             return False
         else:
-            archivo = open(f"{os.path.dirname(__file__)}/data/comandas.csv","a")
-            temp_comanda = f"{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
-            archivo.write(temp_comanda)
-            archivo.close()
-            return True
+            if self.get_tipo() == "comida":
+                archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","a")
+                temp_comanda = f"{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
+                archivo.write(temp_comanda)
+                archivo.close()
+                return True
+            elif self.get_tipo() == "bebestible":
+                archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","a")
+                temp_comanda = f"{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
+                archivo.write(temp_comanda)
+                archivo.close()
+                return True
         
 
 
@@ -118,8 +140,12 @@ class Plato:
 
 
 if __name__ == "__main__":
-    comandafalsa = Comanda("Vicente")
-    comandafalsa.agregar_pedidos("bebida")
+    comandafalsa = Comanda("Vicente","Comida")
     comandafalsa.agregar_pedidos("hamburguesa")
     comandafalsa.agregar_pedidos("papas")
+    comandafalsa.guardar_comanda()
+    comandafalsa = Comanda("Yo", "Bebestible")
+    comandafalsa.agregar_pedidos("bebida")
+    comandafalsa.agregar_pedidos("agua")
+    comandafalsa.agregar_pedidos("jugo")
     comandafalsa.guardar_comanda()

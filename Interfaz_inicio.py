@@ -135,7 +135,7 @@ if __name__ == "__main__":
     except FileExistsError:
         pass
 
-    archivos = ["registros.csv","comandas.csv"]
+    archivos = ["registros.csv","comandas_comida.csv","comandas_bebestibles.csv"]
     for archivo in archivos:
         try:
             temp = open(f"{ruta}/data/{archivo}","x")
