@@ -42,21 +42,21 @@ class RunnerInterfaz(QMainWindow):
         mesa_seleccionada = self.lista_mesas.currentItem()
         if mesa_seleccionada:
             numero_mesa = mesa_seleccionada.text()
-            self.mostrar_dialogo_informativo(f"Sirviendo mesa {numero_mesa}")
+            self.mostrar_dialogo_informativo(f"Sirviendo {numero_mesa}")
             
             if numero_mesa in self.comandas_listas:
                 self.comandas_listas.remove(numero_mesa)
                 self.mostrar_dialogo_informativo(f"Comanda {numero_mesa} entregada a los comensales")
             else:
-                self.mostrar_dialogo_informativo(f"No hay comanda lista para la mesa {numero_mesa}")
+                self.mostrar_dialogo_informativo(f"No hay comanda lista para la {numero_mesa}")
 
     def limpiar_mesa(self):  # Realizar acciones para limpiar la mesa según el número de mesa seleccionado
         mesa_seleccionada = self.lista_mesas.currentItem()
         if mesa_seleccionada:
             numero_mesa = mesa_seleccionada.text()
-            self.mostrar_dialogo_informativo(f"Limpiando mesa {numero_mesa}")
+            self.mostrar_dialogo_informativo(f"Limpiando {numero_mesa}")
             self.lista_mesas.takeItem(self.lista_mesas.currentRow())
-            self.mostrar_dialogo_informativo(f"Mesa {numero_mesa} liberada y lista para nuevos comensales")
+            self.mostrar_dialogo_informativo(f"{numero_mesa} liberada y lista para nuevos comensales")
 
     def mostrar_dialogo_informativo(self, mensaje):
         dialogo = QMessageBox(self)
