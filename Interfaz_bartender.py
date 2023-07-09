@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QTableWidget, QVBoxLayout, QWidget, QHBoxLayout, QTableWidgetItem, QPushButton
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QTableWidget, QVBoxLayout, QWidget, QHBoxLayout, QTableWidgetItem, QPushButton, QHeaderView
 from PyQt6.QtCore import QTimer
 from datetime import datetime
 import pandas as pd
@@ -10,7 +10,7 @@ class VentanaBartender(QMainWindow):
         super().__init__()
         self.setWindowTitle("Bartender")
         self.usuario_actual = usuario
-        self.setFixedWidth(700)
+        self.setFixedWidth(600)
         #Elementos
 
         bienvenida = QLabel(f"Bienvenido {self.usuario_actual}")
@@ -28,6 +28,7 @@ class VentanaBartender(QMainWindow):
         #Config
         self.tabla.setHorizontalHeaderLabels(["Garzon","Hora","Pedidos","Estado"])
         self.tabla.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.tabla.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
         self.tabla.cellClicked.connect(self.actualizar_fila_seleccionada)
         self.boton_cambiar_estado.clicked.connect(self.cambiar_estado)
         #Layouts
