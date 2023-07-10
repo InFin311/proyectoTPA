@@ -1,10 +1,11 @@
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QDialog, QMessageBox
+from PyQt6.QtWidgets import QApplication, QVBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QDialog, QMessageBox
 from Interfaz_anfitrion import AnfitrionInterfaz
 from Interfaz_garzon import GarzonInterfaz
 from Interfaz_bartender import VentanaBartender
 from Interfaz_runner import RunnerInterfaz
+from Interfaz_chef import ChefUI
 
 class RegistroVentana(QDialog):
     def __init__(self):
@@ -130,6 +131,9 @@ class LoginVentana(QWidget):
         elif modo == "runner":
             self.interfaz_runner = RunnerInterfaz()
             self.interfaz_runner.show()
+        elif modo == "chef":
+            self.interfaz_chef = ChefUI()
+            self.interfaz_chef.show()
 
 if __name__ == "__main__":
     ruta = os.path.dirname(__file__)

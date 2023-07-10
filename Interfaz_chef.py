@@ -3,6 +3,7 @@ import os
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit, QPushButton, \
     QComboBox, QDialog, QMessageBox, QListWidget, QLayout
 from PyQt6.QtGui import QColor
+from PyQt6.QtCore import Qt
 from clases import Comanda
 
 
@@ -25,14 +26,20 @@ class verComanda(QDialog):
         botones.addWidget(QPushButton("Cancelar"))
         botones.itemAt(1).widget().clicked.connect(self.hide)
 
-        main_layout.addWidget(QLabel("Garzon:"))
+        main_layout.addWidget(QLabel("Mesa:"))
         main_layout.addWidget(QLineEdit(f"{self.comandas[0]}"))
-        main_layout.addWidget(QLabel("Hora:"))
+        main_layout.addWidget(QLabel("Garzon:"))
         main_layout.addWidget(QLineEdit(f"{self.comandas[1]}"))
-        main_layout.addWidget(QLabel("Pedidos:"))
+        main_layout.addWidget(QLabel("Hora:"))
         main_layout.addWidget(QLineEdit(f"{self.comandas[2]}"))
-        main_layout.addWidget(QLabel("Estado:"))
+        main_layout.addWidget(QLabel("Pedidos:"))
         main_layout.addWidget(QLineEdit(f"{self.comandas[3]}"))
+        main_layout.addWidget(QLabel("Estado:"))
+        # self.comandas[4] -> estado actual
+        estado = QComboBox()
+        estado.addItems(["En espera","Preparando", "Cocinando", "Terminado"])
+        estado.setCurrentIndex(estado.findText(self.comandas[4][:-1]))
+        main_layout.addWidget(estado)
         main_layout.addLayout(botones)
 
         self.widgets = ChefUI.getWidgets(main_layout)
@@ -40,9 +47,10 @@ class verComanda(QDialog):
     def guardarNuevaComanda(self):
         archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv", "r")
         comandas = archivo.readlines()
+        print(comandas)
         aux = 0
         for i in comandas:
-            if self.comandas[0] in i:
+            if self.comandas[0] in i and self.comandas[1] in i and self.comandas[2] in i and self.comandas[3] in i:
                 aux = comandas.index(i)
                 break
         archivo.close()
@@ -53,6 +61,8 @@ class verComanda(QDialog):
         for widget in self.widgets:
             if type(widget) is QLineEdit:
                 res += [widget.text()]
+            elif type(widget) is QComboBox:
+                res += [widget.currentText()]
 
         if not ("\n" in res[-1]):
             res[-1] = res[-1] + "\n"
@@ -129,7 +139,9 @@ class ChefUI(QMainWindow):
 
     def abrirComanda(self):
         comanda_texto = self.column.selectedItems()[0].text()
+        
         comanda_texto = comanda_texto.split(", ")
+        print(comanda_texto)
 
         self.comanda_ventana = verComanda(comanda_texto, self)
         self.comanda_ventana.setStyleSheet(f"background-color: {QColor(50, 50, 50).name()}; color: white")
