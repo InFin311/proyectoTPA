@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLa
 from Interfaz_anfitrion import AnfitrionInterfaz
 from Interfaz_garzon import GarzonInterfaz
 from Interfaz_bartender import VentanaBartender
+from Interfaz_runner import RunnerInterfaz
 
 class RegistroVentana(QDialog):
     def __init__(self):
@@ -126,7 +127,9 @@ class LoginVentana(QWidget):
             print(modo)
             self.interfaz_bartender = VentanaBartender(usuario)
             self.interfaz_bartender.show()
-
+        elif modo == "runner":
+            self.interfaz_runner = RunnerInterfaz()
+            self.interfaz_runner.show()
 
 if __name__ == "__main__":
     ruta = os.path.dirname(__file__)
