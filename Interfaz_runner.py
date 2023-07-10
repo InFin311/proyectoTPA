@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QListWidget, QPushButton, QVBoxLayout, QWidget, QMessageBox
-
+from PyQt6.QtCore import Qt
+import os
 
 class RunnerInterfaz(QMainWindow):
     def __init__(self):  # Método constructor de la clase RunnerInterfaz
@@ -27,7 +28,11 @@ class RunnerInterfaz(QMainWindow):
         self.boton_limpiar.clicked.connect(self.limpiar_mesa)
         self.layout.addWidget(self.boton_limpiar)
 
-        self.simular_eventos()  # Simulación de eventos
+        self.boton_actualizar = QPushButton("Actualizar")
+        self.boton_actualizar.clicked.connect(self.actualizar_mesas)
+        self.layout.addWidget(self.boton_actualizar)
+
+        # self.simular_eventos()  # Simulación de eventos
 
     def simular_eventos(self):
         # Ejemplos de mesas que requieren servicios
@@ -38,18 +43,84 @@ class RunnerInterfaz(QMainWindow):
         # Ejemplos de comandas listas para servir
         self.comandas_listas = ["Comanda 1", "Comanda 2"]
 
-    def servir_mesa(self):  # Realizar acciones para servir la mesa según el número de mesa seleccionado
-        mesa_seleccionada = self.lista_mesas.currentItem()
-        if mesa_seleccionada:
-            numero_mesa = mesa_seleccionada.text()
-            self.mostrar_dialogo_informativo(f"Sirviendo {numero_mesa}")
-            
-            if numero_mesa in self.comandas_listas:
-                self.comandas_listas.remove(numero_mesa)
-                self.mostrar_dialogo_informativo(f"Comanda {numero_mesa} entregada a los comensales")
-            else:
-                self.mostrar_dialogo_informativo(f"No hay comanda lista para la {numero_mesa}")
+    def actualizar_mesas(self):
+        archivo_bebestibles = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","r")
+        archivo_comida = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","r")
 
+        for linea in archivo_bebestibles:
+            if "Terminado" in linea:
+                aux = linea.split(",")
+                comanda = f"Mesa {aux[0]}, Pedido: {aux[3]}, Bebestible"
+                posibles = self.lista_mesas.findItems(comanda, Qt.MatchFlag.MatchExactly)
+                try:
+                    if posibles[0].text() == comanda:
+                        continue
+                    else:
+                        self.lista_mesas.addItem(comanda)
+                except:
+                    self.lista_mesas.addItem(comanda)
+        for linea in archivo_comida:
+            if "Terminado" in linea:
+                aux = linea.split(",")
+                comanda = f"Mesa {aux[0]}, Pedido: {aux[3]}, Comida"
+                posibles = self.lista_mesas.findItems(comanda, Qt.MatchFlag.MatchExactly)
+                try:
+                    if posibles[0].text() == comanda:
+                        continue
+                    else:
+                        self.lista_mesas.addItem(comanda)
+                except:
+                    self.lista_mesas.addItem(comanda)
+        archivo_bebestibles.close()
+        archivo_comida.close()
+        
+
+    #Una vez que es servido eliminar la comanda del archivo        
+    def servir_mesa(self):  # Realizar acciones para servir la mesa según el número de mesa seleccionado
+        mesa_seleccionada = self.lista_mesas.currentItem().text()
+        mesa_seleccionada = mesa_seleccionada.split(",")
+        #tipo mesa_seleccionada[2]
+        #mesa mesa_seleccionada[0][4:6]
+
+        if "Bebestible" in mesa_seleccionada[2]:
+            #trabajar en archivo bebestibles
+            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","r")
+            mesa = mesa_seleccionada[0][5:6]
+            archivo_editado = str()
+            for linea in archivo:
+                if linea[0] == mesa:
+                    continue
+                else:
+                    archivo_editado += linea
+            archivo.close()
+            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","w")
+            archivo.write(archivo_editado)
+            archivo.close()
+            
+
+            self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
+            self.lista_mesas.takeItem(self.lista_mesas.currentRow())
+
+        elif "Comida" in mesa_seleccionada[2]:
+            #trabajar en archivo comida
+            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","w")
+            mesa = mesa_seleccionada[0][5:6]
+            archivo_editado = str()
+            for linea in archivo:
+                if linea[0] == mesa:
+                    continue
+                else:
+                    archivo_editado += linea
+            print(archivo_editado)
+            archivo.close()
+            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","w")
+            archivo.write(archivo_editado)
+            archivo.close()
+            
+            
+            self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
+            self.lista_mesas.takeItem(self.lista_mesas.currentRow())
+            
     def limpiar_mesa(self):  # Realizar acciones para limpiar la mesa según el número de mesa seleccionado
         mesa_seleccionada = self.lista_mesas.currentItem()
         if mesa_seleccionada:
