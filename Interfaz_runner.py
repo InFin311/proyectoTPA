@@ -24,9 +24,9 @@ class RunnerInterfaz(QMainWindow):
         self.boton_servir.clicked.connect(self.servir_mesa)
         self.layout.addWidget(self.boton_servir)
 
-        self.boton_limpiar = QPushButton("Limpiar Mesa")
-        self.boton_limpiar.clicked.connect(self.limpiar_mesa)
-        self.layout.addWidget(self.boton_limpiar)
+        # self.boton_limpiar = QPushButton("Limpiar Mesa")
+        # self.boton_limpiar.clicked.connect(self.limpiar_mesa)
+        # self.layout.addWidget(self.boton_limpiar)
 
         self.boton_actualizar = QPushButton("Actualizar")
         self.boton_actualizar.clicked.connect(self.actualizar_mesas)

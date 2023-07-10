@@ -120,7 +120,7 @@ class LoginVentana(QWidget):
             self.hide()
         elif modo == "garzon":
             print(modo)
-            self.interfaz_garzon = GarzonInterfaz()
+            self.interfaz_garzon = GarzonInterfaz(usuario)
             self.interfaz_garzon.show()
             self.hide()
         elif modo == "bartender":
