@@ -34,7 +34,7 @@ class Mesa:
 
 
 class Comanda:
-    def __init__(self,garzon: str, tipo:str):
+    def __init__(self,garzon: str, tipo:str, mesa:int):
         self.garzon = garzon.lower()
         self.hora = datetime.now().strftime("%H:%M")
         self.pedidos = []
@@ -42,6 +42,7 @@ class Comanda:
         #estados si es bebestible 0 = en espera ; 1 = preparando; 2 = terminado
         self.estado = 0
         self.tipo = tipo.lower()
+        self.mesa = mesa
 
     def pedido_vacio(self):
         if len(self.pedidos) == 0:
@@ -113,6 +114,9 @@ class Comanda:
     def get_tipo(self):
         return self.tipo
     
+    def get_mesa(self):
+        return self.mesa
+    
     def guardar_comanda(self):
         if self.pedido_vacio == True:
             #Retorna falso, no se guardaran pedidos vacios
@@ -120,13 +124,13 @@ class Comanda:
         else:
             if self.get_tipo() == "comida":
                 archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","a")
-                temp_comanda = f"{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
+                temp_comanda = f"{self.get_mesa()},{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
                 archivo.write(temp_comanda)
                 archivo.close()
                 return True
             elif self.get_tipo() == "bebestible":
                 archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","a")
-                temp_comanda = f"{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
+                temp_comanda = f"{self.get_mesa()},{self.get_garzon()},{self.get_hora()},{self.get_pedidos()},{self.get_estado()}\n"
                 archivo.write(temp_comanda)
                 archivo.close()
                 return True
@@ -140,11 +144,11 @@ class Plato:
 
 
 if __name__ == "__main__":
-    comandafalsa = Comanda("Vicente","Comida")
+    comandafalsa = Comanda("Vicente","Comida",1)
     comandafalsa.agregar_pedidos("hamburguesa")
     comandafalsa.agregar_pedidos("papas")
     comandafalsa.guardar_comanda()
-    comandafalsa = Comanda("Yo", "Bebestible")
+    comandafalsa = Comanda("Yo", "Bebestible",1)
     comandafalsa.agregar_pedidos("bebida")
     comandafalsa.agregar_pedidos("agua")
     comandafalsa.agregar_pedidos("jugo")

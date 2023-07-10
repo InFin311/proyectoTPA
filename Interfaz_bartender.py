@@ -15,7 +15,7 @@ class VentanaBartender(QMainWindow):
 
         bienvenida = QLabel(f"Bienvenido {self.usuario_actual}")
         titulo = QLabel("Comandas actuales")
-        self.tabla = QTableWidget(100,4)
+        self.tabla = QTableWidget(100,5)
         self.hora_actual = QLabel(f"Hora actual: {datetime.now().strftime('%H:%M:%S')}")
 
         actualizar = QPushButton("Actualizar")
@@ -26,9 +26,10 @@ class VentanaBartender(QMainWindow):
         self.fila_seleccionada = 0
 
         #Config
-        self.tabla.setHorizontalHeaderLabels(["Garzon","Hora","Pedidos","Estado"])
+        self.tabla.setHorizontalHeaderLabels(["Mesa","Garzon","Hora","Pedidos","Estado"])
         self.tabla.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
-        self.tabla.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        self.tabla.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        self.tabla.horizontalHeader().setSectionResizeMode(0,QHeaderView.ResizeMode.ResizeToContents)
         self.tabla.cellClicked.connect(self.actualizar_fila_seleccionada)
         self.boton_cambiar_estado.clicked.connect(self.cambiar_estado)
         #Layouts
@@ -63,7 +64,7 @@ class VentanaBartender(QMainWindow):
     
     def imprimir_comandas(self):
         archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv", "r")
-        temp_dataframe = pd.read_csv(archivo, names=["Garzon","Hora","Pedidos","Estado"])
+        temp_dataframe = pd.read_csv(archivo, names=["Mesa","Garzon","Hora","Pedidos","Estado"])
         archivo.close()
         if len(temp_dataframe) == 0:
             #Si el dataframe esta vacio
