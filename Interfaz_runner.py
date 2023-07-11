@@ -103,7 +103,7 @@ class RunnerInterfaz(QMainWindow):
 
         elif "Comida" in mesa_seleccionada[2]:
             #trabajar en archivo comida
-            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","w")
+            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","r")
             mesa = mesa_seleccionada[0][5:6]
             archivo_editado = str()
             for linea in archivo:
@@ -111,12 +111,10 @@ class RunnerInterfaz(QMainWindow):
                     continue
                 else:
                     archivo_editado += linea
-            print(archivo_editado)
             archivo.close()
             archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","w")
             archivo.write(archivo_editado)
             archivo.close()
-            
             
             self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
             self.lista_mesas.takeItem(self.lista_mesas.currentRow())
