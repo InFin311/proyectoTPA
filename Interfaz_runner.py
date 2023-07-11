@@ -77,48 +77,51 @@ class RunnerInterfaz(QMainWindow):
 
     #Una vez que es servido eliminar la comanda del archivo        
     def servir_mesa(self):  # Realizar acciones para servir la mesa según el número de mesa seleccionado
-        mesa_seleccionada = self.lista_mesas.currentItem().text()
-        mesa_seleccionada = mesa_seleccionada.split(",")
-        #tipo mesa_seleccionada[2]
-        #mesa mesa_seleccionada[0][4:6]
+        try:    
+            mesa_seleccionada = self.lista_mesas.currentItem().text()
+            mesa_seleccionada = mesa_seleccionada.split(",")
+            #tipo mesa_seleccionada[2]
+            #mesa mesa_seleccionada[0][4:6]
 
-        if "Bebestible" in mesa_seleccionada[2]:
-            #trabajar en archivo bebestibles
-            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","r")
-            mesa = mesa_seleccionada[0][5:6]
-            archivo_editado = str()
-            for linea in archivo:
-                if linea[0] == mesa:
-                    continue
-                else:
-                    archivo_editado += linea
-            archivo.close()
-            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","w")
-            archivo.write(archivo_editado)
-            archivo.close()
-            
+            if "Bebestible" in mesa_seleccionada[2]:
+                #trabajar en archivo bebestibles
+                archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","r")
+                mesa = mesa_seleccionada[0][5:6]
+                archivo_editado = str()
+                for linea in archivo:
+                    if linea[0] == mesa:
+                        continue
+                    else:
+                        archivo_editado += linea
+                archivo.close()
+                archivo = open(f"{os.path.dirname(__file__)}/data/comandas_bebestibles.csv","w")
+                archivo.write(archivo_editado)
+                archivo.close()
 
-            self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
-            self.lista_mesas.takeItem(self.lista_mesas.currentRow())
 
-        elif "Comida" in mesa_seleccionada[2]:
-            #trabajar en archivo comida
-            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","r")
-            mesa = mesa_seleccionada[0][5:6]
-            archivo_editado = str()
-            for linea in archivo:
-                if linea[0] == mesa:
-                    continue
-                else:
-                    archivo_editado += linea
-            archivo.close()
-            archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","w")
-            archivo.write(archivo_editado)
-            archivo.close()
-            
-            self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
-            self.lista_mesas.takeItem(self.lista_mesas.currentRow())
-            
+                self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
+                self.lista_mesas.takeItem(self.lista_mesas.currentRow())
+
+            elif "Comida" in mesa_seleccionada[2]:
+                #trabajar en archivo comida
+                archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","r")
+                mesa = mesa_seleccionada[0][5:6]
+                archivo_editado = str()
+                for linea in archivo:
+                    if linea[0] == mesa:
+                        continue
+                    else:
+                        archivo_editado += linea
+                archivo.close()
+                archivo = open(f"{os.path.dirname(__file__)}/data/comandas_comida.csv","w")
+                archivo.write(archivo_editado)
+                archivo.close()
+
+                self.mostrar_dialogo_informativo(f"Sirviendo mesa {mesa}")
+                self.lista_mesas.takeItem(self.lista_mesas.currentRow())
+        except:
+            QMessageBox.warning(self,"Error", "No hay comandas para servir")
+
     def limpiar_mesa(self):  # Realizar acciones para limpiar la mesa según el número de mesa seleccionado
         mesa_seleccionada = self.lista_mesas.currentItem()
         if mesa_seleccionada:
