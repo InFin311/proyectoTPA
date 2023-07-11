@@ -89,30 +89,33 @@ class GarzonInterfaz(QMainWindow):
     
 
     def place_order(self):
-        comida_seleccionada = self.comida_combo.text()
-        bebida_seleccionada = self.beb_combo.text()
-        mesa_seleccionada = self.mesa_combo.value()
-        tipo_seleccionado = self.tipo_combo.checkedButton()
+        try:    
+            comida_seleccionada = self.comida_combo.text()
+            bebida_seleccionada = self.beb_combo.text()
+            mesa_seleccionada = self.mesa_combo.value()
+            tipo_seleccionado = self.tipo_combo.checkedButton()
 
-        if tipo_seleccionado.text() == "Comida":
-            #guardar en comandas comida
-            if comida_seleccionada == "":
-                QMessageBox.warning(self, "Advertencia", "Por favor, escriba el pedido")
-            else:
-                temp_comanda = Comanda(self.usuario, "Comida",mesa_seleccionada)
-                temp_comanda.agregar_pedidos(comida_seleccionada)
-                temp_comanda.guardar_comanda()
-                QMessageBox.information(self, "Pedido realizado", "El pedido fue realizado")
+            if tipo_seleccionado.text() == "Comida":
+                #guardar en comandas comida
+                if comida_seleccionada == "":
+                    QMessageBox.warning(self, "Advertencia", "Por favor, escriba el pedido")
+                else:
+                    temp_comanda = Comanda(self.usuario, "Comida",mesa_seleccionada)
+                    temp_comanda.agregar_pedidos(comida_seleccionada)
+                    temp_comanda.guardar_comanda()
+                    QMessageBox.information(self, "Pedido realizado", "El pedido fue realizado")
 
-        elif tipo_seleccionado.text() == "Bebestible":
-            #guardar comandas bebestible
-            if bebida_seleccionada == "":
-                QMessageBox.warning(self, "Advertencia", "Por favor, escriba el pedido")
-            else:
-                temp_comanda = Comanda(self.usuario, "Bebestible",mesa_seleccionada)
-                temp_comanda.agregar_pedidos(bebida_seleccionada)
-                temp_comanda.guardar_comanda()
-                QMessageBox.information(self, "Pedido realizado", "El Pedido fue realizado")
+            elif tipo_seleccionado.text() == "Bebestible":
+                #guardar comandas bebestible
+                if bebida_seleccionada == "":
+                    QMessageBox.warning(self, "Advertencia", "Por favor, escriba el pedido")
+                else:
+                    temp_comanda = Comanda(self.usuario, "Bebestible",mesa_seleccionada)
+                    temp_comanda.agregar_pedidos(bebida_seleccionada)
+                    temp_comanda.guardar_comanda()
+                    QMessageBox.information(self, "Pedido realizado", "El Pedido fue realizado")
+        except:
+            QMessageBox.warning(self,"Error","Debe rellenar los campos")
             
 
 if __name__ == "__main__":
